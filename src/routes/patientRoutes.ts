@@ -13,4 +13,7 @@ router.post('/', (req, res) => patientController.createPatient(req, res));
 // GET /patients/:id - Get patient by ID
 router.get('/:id', (req, res) => patientController.getPatientById(req, res));
 
+// PATCH /patients/:id - Update patient
+router.patch('/:id', (req, res) => patientController.updatePatient(req, res));
+
 export default router;

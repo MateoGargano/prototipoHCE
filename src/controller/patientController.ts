@@ -126,4 +126,67 @@ export class PatientController {
       });
     }
   }
+
+  async updatePatient(req: Request, res: Response): Promise<void> {
+    try {
+      const { id } = req.params;
+      const updates: Partial<Patient> = req.body;
+
+      // Validate request parameters
+      if (!id) {
+        res.status(400).json({
+          success: false,
+          error: 'Bad request',
+          message: 'Patient ID is required'
+        });
+        return;
+      }
+
+      // Validate request body
+      if (!updates || Object.keys(updates).length === 0) {
+        res.status(400).json({
+          success: false,
+          error: 'Bad request',
+          message: 'Update data is required'
+        });
+        return;
+      }
+
+      const updatedPatient = await this.patientService.updatePatient(id, updates);
+      
+      res.status(200).json({
+        success: true,
+        data: updatedPatient,
+        message: 'Patient updated successfully'
+      });
+    } catch (error) {
+      console.error('Error in patient controller:', error);
+      
+      if (error instanceof Error) {
+        if (error.message.includes('Patient with ID') && error.message.includes('not found')) {
+          res.status(404).json({
+            success: false,
+            error: 'Not found',
+            message: error.message
+          });
+          return;
+        }
+        
+        if (error.message.includes('Update data is required')) {
+          res.status(400).json({
+            success: false,
+            error: 'Bad request',
+            message: error.message
+          });
+          return;
+        }
+      }
+
+      res.status(500).json({
+        success: false,
+        error: 'Internal server error',
+        message: 'Failed to update patient'
+      });
+    }
+  }
 }

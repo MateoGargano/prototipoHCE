@@ -3,5 +3,5 @@
 node_modules
 dist/
 
-hapi.application.yaml
+hapi.application.yaml/
 hapi.postgress.data/
